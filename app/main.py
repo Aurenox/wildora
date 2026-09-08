@@ -47,8 +47,8 @@ STATIC_DIR = next(
 )
 
 
-UPLOAD_DIR = Path("/tmp/wildora/uploads")
-CREATURE_DIR = Path("/tmp/wildora/creatures")
+UPLOAD_DIR = Path("/var/data/uploads")
+CREATURE_DIR = Path("/var/data/creatures")
 
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 CREATURE_DIR.mkdir(parents=True, exist_ok=True)
