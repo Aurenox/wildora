@@ -51,11 +51,11 @@ STATIC_DIR = next(
 # RUNTIME DATA
 # ============================================================
 
-# On Render:
-#   Set WILDORA_DATA_DIR=/var/data
+# Render:
+# Set WILDORA_DATA_DIR=/var/data
 #
-# Locally:
-#   Automatically uses ./runtime_data
+# Local:
+# Automatically uses ./runtime_data
 
 DATA_DIR = Path(
     os.getenv(
@@ -91,10 +91,9 @@ app = FastAPI(
 
 
 # ============================================================
-# RUNTIME GENERATED FILES
+# GENERATED / UPLOADED IMAGES
 # ============================================================
 
-# Uploaded wildlife photographs
 app.mount(
     "/static/uploads",
     StaticFiles(
@@ -103,7 +102,6 @@ app.mount(
     name="uploads",
 )
 
-# AI-generated fantasy companion images
 app.mount(
     "/static/creatures",
     StaticFiles(
