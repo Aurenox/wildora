@@ -47,12 +47,36 @@ STATIC_DIR = next(
 )
 
 
-UPLOAD_DIR = Path("/var/data/uploads")
-CREATURE_DIR = Path("/var/data/creatures")
+# ============================================================
+# RUNTIME DATA
+# ============================================================
 
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-CREATURE_DIR.mkdir(parents=True, exist_ok=True)
+# On Render:
+#   Set WILDORA_DATA_DIR=/var/data
+#
+# Locally:
+#   Automatically uses ./runtime_data
 
+DATA_DIR = Path(
+    os.getenv(
+        "WILDORA_DATA_DIR",
+        str(PROJECT_DIR / "runtime_data"),
+    )
+)
+
+UPLOAD_DIR = DATA_DIR / "uploads"
+CREATURE_DIR = DATA_DIR / "creatures"
+
+
+UPLOAD_DIR.mkdir(
+    parents=True,
+    exist_ok=True,
+)
+
+CREATURE_DIR.mkdir(
+    parents=True,
+    exist_ok=True,
+)
 
 
 # ============================================================
@@ -65,6 +89,33 @@ app = FastAPI(
     version="2.0.0",
 )
 
+
+# ============================================================
+# RUNTIME GENERATED FILES
+# ============================================================
+
+# Uploaded wildlife photographs
+app.mount(
+    "/static/uploads",
+    StaticFiles(
+        directory=str(UPLOAD_DIR)
+    ),
+    name="uploads",
+)
+
+# AI-generated fantasy companion images
+app.mount(
+    "/static/creatures",
+    StaticFiles(
+        directory=str(CREATURE_DIR)
+    ),
+    name="creatures",
+)
+
+
+# ============================================================
+# NORMAL STATIC FILES
+# ============================================================
 
 app.mount(
     "/static",
