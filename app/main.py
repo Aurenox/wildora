@@ -48,24 +48,34 @@ STATIC_DIR = next(
 
 
 # ============================================================
-# RUNTIME DATA
+# IMAGE STORAGE
 # ============================================================
 
-# Render:
-# Set WILDORA_DATA_DIR=/var/data
+# LOCAL:
+# Images are stored inside app/static so your existing local
+# images continue to work exactly as before.
 #
-# Local:
-# Automatically uses ./runtime_data
+# RENDER:
+# Set:
+#
+# WILDORA_DATA_DIR=/var/data
+#
+# Then uploaded/generated images are stored on the
+# Render persistent disk.
+#
+# If WILDORA_DATA_DIR is not set, local storage is used.
 
-DATA_DIR = Path(
-    os.getenv(
-        "WILDORA_DATA_DIR",
-        str(PROJECT_DIR / "runtime_data"),
+if os.getenv("WILDORA_DATA_DIR"):
+    DATA_DIR = Path(
+        os.getenv("WILDORA_DATA_DIR")
     )
-)
 
-UPLOAD_DIR = DATA_DIR / "uploads"
-CREATURE_DIR = DATA_DIR / "creatures"
+    UPLOAD_DIR = DATA_DIR / "uploads"
+    CREATURE_DIR = DATA_DIR / "creatures"
+
+else:
+    UPLOAD_DIR = STATIC_DIR / "uploads"
+    CREATURE_DIR = STATIC_DIR / "creatures"
 
 
 UPLOAD_DIR.mkdir(
@@ -91,7 +101,7 @@ app = FastAPI(
 
 
 # ============================================================
-# GENERATED / UPLOADED IMAGES
+# UPLOADED WILDLIFE IMAGES
 # ============================================================
 
 app.mount(
@@ -101,6 +111,11 @@ app.mount(
     ),
     name="uploads",
 )
+
+
+# ============================================================
+# GENERATED COMPANION IMAGES
+# ============================================================
 
 app.mount(
     "/static/creatures",
