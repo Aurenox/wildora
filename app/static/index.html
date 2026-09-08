@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Wildora — discover India's wildlife with AI."
+    >
+
+    <title>Wildora — India's Wildlife, Reimagined</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+
+<body>
+
+<!-- ========================================================
+     NAVIGATION
+========================================================= -->
+
+<header class="site-header">
+
+    <nav class="nav container">
+
+        <a
+            href="#top"
+            class="brand"
+        >
+            <span class="brand-mark">W</span>
+
+            <span class="brand-name">
+                Wildora
+            </span>
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="#discover">
+                Discover
+            </a>
+
+            <a href="#atlas">
+                Atlas
+            </a>
+
+            <a href="#collection">
+                Collection
+            </a>
+
+            <a href="#badges">
+                Badges
+            </a>
+
+        </div>
+
+
+        <a
+            href="#observe"
+            class="nav-action"
+        >
+            Start exploring
+            <span>↗</span>
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main id="top">
+
+
+<!-- ========================================================
+     HERO
+========================================================= -->
+
+<section class="hero section">
+
+    <div class="container hero-grid">
+
+        <div class="hero-copy">
+
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                AI wildlife discovery
+            </div>
+
+
+            <h1>
+                India's wildlife.
+                <span>
+                    One discovery
+                    at a time.
+                </span>
+            </h1>
+
+
+            <p class="hero-description">
+                Point your camera at the wild.
+                Wildora identifies what you found,
+                explains its role in nature and
+                transforms every sighting into
+                your own wildlife journey.
+            </p>
+
+
+            <div class="hero-actions">
+
+                <a
+                    href="#observe"
+                    class="button button-primary"
+                >
+                    <span>Discover wildlife</span>
+                    <span>→</span>
+                </a>
+
+
+                <a
+                    href="#how-it-works"
+                    class="button button-secondary"
+                >
+                    How it works
+                </a>
+
+            </div>
+
+
+            <div class="hero-trust">
+
+                <span>
+                    ● Built for India's biodiversity
+                </span>
+
+                <span>
+                    ● AI-powered
+                </span>
+
+                <span>
+                    ● Explorer progression
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO VISUAL -->
+
+        <div class="hero-visual">
+
+            <div class="hero-glow"></div>
+
+            <div class="hero-orbit orbit-one"></div>
+            <div class="hero-orbit orbit-two"></div>
+
+
+            <div class="hero-animal">
+
+                <div class="animal-emoji">
+                    🐘
+                </div>
+
+            </div>
+
+
+            <div class="hero-float-card card-observe">
+
+                <span class="float-icon">
+                    ◉
+                </span>
+
+                <div>
+                    <strong>
+                        New discovery
+                    </strong>
+
+                    <small>
+                        Indian Elephant
+                    </small>
+                </div>
+
+            </div>
+
+
+            <div class="hero-float-card card-xp">
+
+                <strong>
+                    +225 XP
+                </strong>
+
+                <small>
+                    Observation recorded
+                </small>
+
+            </div>
+
+
+            <div class="hero-location">
+                <span>●</span>
+                Western Ghats
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     EXPLORER DASHBOARD
+========================================================= -->
+
+<section
+    id="discover"
+    class="dashboard section-small"
+>
+
+    <div class="container">
+
+        <div class="section-heading-row">
+
+            <div>
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Explorer dashboard
+                </div>
+
+                <h2>
+                    Your wild journey
+                </h2>
+
+            </div>
+
+
+            <div class="dashboard-level">
+
+                <span>
+                    LEVEL
+                </span>
+
+                <strong id="statLevel">
+                    1
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <span class="stat-icon">
+                    ◉
+                </span>
+
+                <div>
+                    <small>
+                        Discoveries
+                    </small>
+
+                    <strong id="statObs">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-icon">
+                    ✦
+                </span>
+
+                <div>
+                    <small>
+                        Species
+                    </small>
+
+                    <strong id="statSpecies">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-icon">
+                    ◆
+                </span>
+
+                <div>
+                    <small>
+                        Total XP
+                    </small>
+
+                    <strong id="statXp">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card level-stat">
+
+                <div class="level-stat-top">
+
+                    <small>
+                        Explorer Level
+                    </small>
+
+                    <span id="levelPct">
+                        0%
+                    </span>
+
+                </div>
+
+
+                <div class="level-progress">
+
+                    <div
+                        id="levelBar"
+                        class="level-progress-fill"
+                    ></div>
+
+                </div>
+
+
+                <div class="level-stat-bottom">
+
+                    <span id="levelMeta">
+                        0 / 500 XP
+                    </span>
+
+                    <span id="nextLevelText">
+                        500 XP to Level 2
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     OBSERVE
+========================================================= -->
+
+<section
+    id="observe"
+    class="observe-section section"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Make an observation
+            </div>
+
+            <h2>
+                What did you find?
+            </h2>
+
+            <p>
+                Upload a photo and let Wildora
+                investigate it.
+            </p>
+
+        </div>
+
+
+        <form
+            id="observeForm"
+            class="capture-shell"
+        >
+
+            <div class="capture-main">
+
+                <label
+                    id="dropzone"
+                    class="dropzone"
+                    for="photo"
+                >
+
+                    <input
+                        id="photo"
+                        name="photo"
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        required
+                    >
+
+
+                    <div class="drop-content">
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <strong>
+                            Drop a wildlife photo here
+                        </strong>
+
+                        <span>
+                            or click to browse
+                        </span>
+
+                        <small>
+                            JPG, PNG, WEBP · Max 12 MB
+                        </small>
+
+                    </div>
+
+
+                    <img
+                        id="preview"
+                        class="upload-preview"
+                        alt="Selected wildlife"
+                        hidden
+                    >
+
+                    <div
+                        id="dropCopy"
+                        class="drop-copy"
+                    >
+                        Your image stays part of
+                        your observation.
+                    </div>
+
+                </label>
+
+
+                <div class="capture-fields">
+
+                    <div class="field">
+
+                        <label for="locality">
+                            Where did you see it?
+                        </label>
+
+                        <input
+                            id="locality"
+                            name="locality"
+                            type="text"
+                            placeholder="e.g. Wayanad, Kerala"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="locateBtn"
+                        class="location-button"
+                    >
+                        ◎ Use my location
+                    </button>
+
+
+                    <input
+                        id="latitude"
+                        name="latitude"
+                        type="hidden"
+                    >
+
+                    <input
+                        id="longitude"
+                        name="longitude"
+                        type="hidden"
+                    >
+
+                </div>
+
+
+                <button
+                    id="submitBtn"
+                    class="button button-primary submit-button"
+                    type="submit"
+                >
+                    <span>
+                        Identify with AI
+                    </span>
+
+                    <span>
+                        ✦
+                    </span>
+                </button>
+
+
+                <div
+                    id="status"
+                    class="status"
+                    aria-live="polite"
+                ></div>
+
+            </div>
+
+
+            <!-- SAMPLE DISCOVERIES -->
+
+            <aside class="sample-panel">
+
+                <div class="sample-heading">
+
+                    <span>
+                        TRY A SAMPLE
+                    </span>
+
+                    <small>
+                        No photo?
+                    </small>
+
+                </div>
+
+
+                <div class="sample-grid">
+
+                    <button
+                        type="button"
+                        class="sample-card"
+                        data-sample-id="elephant"
+                        data-image="/static/demo/elephant.svg"
+                    >
+
+                        <img
+                            src="/static/demo/elephant.svg"
+                            alt="Indian Elephant"
+                        >
+
+                        <span>
+                            Indian Elephant
+                        </span>
+
+                        <small>
+                            Mammal
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="sample-card"
+                        data-sample-id="peafowl"
+                        data-image="/static/demo/peafowl.svg"
+                    >
+
+                        <img
+                            src="/static/demo/peafowl.svg"
+                            alt="Indian Peafowl"
+                        >
+
+                        <span>
+                            Indian Peafowl
+                        </span>
+
+                        <small>
+                            Bird
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="sample-card"
+                        data-sample-id="frog"
+                        data-image="/static/demo/gliding-frog.svg"
+                    >
+
+                        <img
+                            src="/static/demo/gliding-frog.svg"
+                            alt="Malabar Gliding Frog"
+                        >
+
+                        <span>
+                            Malabar Gliding Frog
+                        </span>
+
+                        <small>
+                            Amphibian
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="sample-card"
+                        data-sample-id="butterfly"
+                        data-image="/static/demo/common-mormon.svg"
+                    >
+
+                        <img
+                            src="/static/demo/common-mormon.svg"
+                            alt="Common Mormon"
+                        >
+
+                        <span>
+                            Common Mormon
+                        </span>
+
+                        <small>
+                            Butterfly
+                        </small>
+
+                    </button>
+
+                </div>
+
+            </aside>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     RESULT
+========================================================= -->
+
+<section
+    id="result"
+    class="result-section section"
+    hidden
+>
+
+    <div class="container">
+
+        <div class="result-heading">
+
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Wildora analysis
+            </div>
+
+            <h2 id="resultTitle">
+                Wildlife discovered
+            </h2>
+
+        </div>
+
+
+        <div class="result-grid">
+
+            <!-- REAL SPECIES -->
+
+            <article class="species-card">
+
+                <div class="species-image">
+
+                    <img
+                        id="realImage"
+                        alt="Identified wildlife"
+                    >
+
+                    <span
+                        id="taxonBadge"
+                        class="tag"
+                    >
+                        Wildlife
+                    </span>
+
+                </div>
+
+
+                <div class="species-content">
+
+                    <div class="species-title-row">
+
+                        <div>
+
+                            <span class="mini-label">
+                                SPECIES IDENTIFIED
+                            </span>
+
+                            <h3 id="realName">
+                                —
+                            </h3>
+
+                            <p
+                                id="latinName"
+                                class="latin-name"
+                            >
+                                —
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="confidence"
+                            class="confidence"
+                        >
+                            0% confidence
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div class="detail-item">
+
+                            <span>
+                                Habitat
+                            </span>
+
+                            <strong id="habitatValue">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Ecological role
+                            </span>
+
+                            <strong id="roleValue">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Observation
+                            </span>
+
+                            <strong id="qualityValue">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="fact-box">
+
+                        <span>
+                            DID YOU KNOW?
+                        </span>
+
+                        <p id="funFact">
+                            —
+                        </p>
+
+                    </div>
+
+
+                    <div class="safety-box">
+
+                        <span>
+                            SAFETY NOTE
+                        </span>
+
+                        <p id="safety">
+                            —
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- FANTASY COMPANION -->
+
+            <article class="companion-card">
+
+                <div class="companion-visual">
+
+
+                    <div
+                        class="companion-placeholder"
+                    >
+                        ✦
+                    </div>
+
+                </div>
+
+
+                <div class="companion-content">
+
+                    <div class="companion-label">
+
+                        <span>
+                            WILDORA COMPANION
+                        </span>
+
+                        <span
+                            id="rarity"
+                            class="rarity"
+                        >
+                            Rare
+                        </span>
+
+                    </div>
+
+
+                    <h3 id="creatureName">
+                        Wild Spirit
+                    </h3>
+
+
+                    <p
+                        id="tagline"
+                        class="companion-tagline"
+                    >
+                        Your discovery has a
+                        spirit of its own.
+                    </p>
+
+
+                    <p
+                        id="lore"
+                        class="companion-lore"
+                    >
+                        Discover wildlife,
+                        understand its world,
+                        and unlock a companion
+                        inspired by nature.
+                    </p>
+
+
+                    <div class="abilities-heading">
+                        ABILITIES
+                    </div>
+
+
+                    <ul
+                        id="abilities"
+                        class="abilities"
+                    ></ul>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     XP TOAST
+========================================================= -->
+
+<div
+    id="xpToast"
+    class="xp-toast"
+    aria-live="polite"
+></div>
+
+<div
+    id="xpBurst"
+    class="xp-burst"
+></div>
+
+
+<!-- ========================================================
+     BIODIVERSITY ATLAS
+========================================================= -->
+
+<section
+    id="atlas"
+    class="atlas-section section"
+>
+
+    <div class="container">
+
+        <div class="section-heading-row">
+
+            <div>
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Biodiversity atlas
+                </div>
+
+                <h2>
+                    Your wildlife map
+                </h2>
+
+                <p>
+                    Every location becomes part
+                    of your personal field journal.
+                </p>
+
+            </div>
+
+
+            <div class="atlas-counter">
+
+                <strong id="atlasSpecies">
+                    0
+                </strong>
+
+                <span>
+                    species discovered
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="atlas-layout">
+
+            <div
+                id="map"
+                class="wildlife-map"
+            ></div>
+
+
+            <aside class="taxon-panel">
+
+                <div class="panel-label">
+                    TAXONOMIC RANGE
+                </div>
+
+                <h3>
+                    Biodiversity spread
+                </h3>
+
+                <div
+                    id="taxonList"
+                    class="taxon-list"
+                ></div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     COLLECTION
+========================================================= -->
+
+<section
+    id="collection"
+    class="collection-section section"
+>
+
+    <div class="container">
+
+        <div class="section-heading-row">
+
+            <div>
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Field journal
+                </div>
+
+                <h2>
+                    Your wildlife collection
+                </h2>
+
+                <p>
+                    A living record of everything
+                    you've discovered.
+                </p>
+
+            </div>
+
+
+            <span class="section-count">
+                Personal collection
+            </span>
+
+        </div>
+
+
+        <div
+            id="collectionGrid"
+            class="collection-grid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     BADGES
+========================================================= -->
+
+<section
+    id="badges"
+    class="badges-section section"
+>
+
+    <div class="container">
+
+        <div class="section-heading-row">
+
+            <div>
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Explorer achievements
+                </div>
+
+                <h2>
+                    Earn your field badges
+                </h2>
+
+                <p>
+                    Explore more of India's biodiversity
+                    to unlock them all.
+                </p>
+
+            </div>
+
+
+            <div class="badge-total">
+
+                <strong id="badgeCount">
+                    0
+                </strong>
+
+                <span>
+                    unlocked
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="badgeGrid"
+            class="badge-grid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     HOW IT WORKS
+========================================================= -->
+
+<section
+    id="how-it-works"
+    class="journey-section section"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                The Wildora journey
+            </div>
+
+            <h2>
+                From observation
+                to imagination.
+            </h2>
+
+            <p>
+                A simple field experience with
+                a little bit of magic.
+            </p>
+
+        </div>
+
+
+        <div class="journey-grid">
+
+            <article class="journey-card">
+
+                <span class="journey-number">
+                    01
+                </span>
+
+                <div class="journey-icon">
+                    ◉
+                </div>
+
+                <h3>
+                    Observe
+                </h3>
+
+                <p>
+                    Capture a wildlife encounter
+                    with your camera.
+                </p>
+
+            </article>
+
+
+            <article class="journey-card">
+
+                <span class="journey-number">
+                    02
+                </span>
+
+                <div class="journey-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Understand
+                </h3>
+
+                <p>
+                    AI identifies the species and
+                    explains its place in the ecosystem.
+                </p>
+
+            </article>
+
+
+            <article class="journey-card">
+
+                <span class="journey-number">
+                    03
+                </span>
+
+                <div class="journey-icon">
+                    ◆
+                </div>
+
+                <h3>
+                    Explore
+                </h3>
+
+                <p>
+                    Build your collection, earn XP,
+                    and discover more biodiversity.
+                </p>
+
+            </article>
+
+
+            <article class="journey-card">
+
+                <span class="journey-number">
+                    04
+                </span>
+
+                <div class="journey-icon">
+                    ✧
+                </div>
+
+                <h3>
+                    Imagine
+                </h3>
+
+                <p>
+                    Meet a fantasy companion inspired
+                    by the wildlife you discovered.
+                </p>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     VISION
+========================================================= -->
+
+<section class="vision-section section">
+
+    <div class="container">
+
+        <div class="vision-card">
+
+            <div class="vision-glow"></div>
+
+
+            <div class="vision-content">
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    The Wildora idea
+                </div>
+
+
+                <h2>
+                    Discover more.
+                    <span>
+                        Take nothing.
+                    </span>
+                </h2>
+
+
+                <p>
+                    Wildlife exploration should deepen
+                    curiosity without disturbing the
+                    world being explored.
+                </p>
+
+
+                <a
+                    href="#observe"
+                    class="button button-light"
+                >
+                    Start a discovery
+                    <span>→</span>
+                </a>
+
+            </div>
+
+
+            <div class="vision-mark">
+
+                <div class="vision-ring">
+                    W
+                </div>
+
+                <span>
+                    INDIA'S
+                    <br>
+                    WILD
+                    <br>
+                    ATLAS
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<!-- ========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+    <div class="container footer-inner">
+
+        <div class="footer-brand">
+
+            <a
+                href="#top"
+                class="brand"
+            >
+                <span class="brand-mark">
+                    W
+                </span>
+
+                <span class="brand-name">
+                    Wildora
+                </span>
+            </a>
+
+            <p>
+                India's wildlife,
+                one discovery at a time.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="#observe">
+                Discover
+            </a>
+
+            <a href="#atlas">
+                Atlas
+            </a>
+
+            <a href="#collection">
+                Collection
+            </a>
+
+            <a href="#badges">
+                Badges
+            </a>
+
+        </div>
+
+
+        <div class="footer-note">
+            Built for curious explorers.
+        </div>
+
+    </div>
+
+
+    <div class="container footer-bottom">
+
+        <span>
+            © 2026 Wildora
+        </span>
+
+        <span>
+            Explore responsibly.
+        </span>
+
+    </div>
+
+</footer>
+
+
+<!-- ========================================================
+     SCRIPTS
+========================================================= -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script
+    src="/static/app.js"
+></script>
+
+</body>
+</html>
