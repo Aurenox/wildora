@@ -51,15 +51,15 @@ UPLOAD_DIR = STATIC_DIR / "uploads"
 CREATURE_DIR = STATIC_DIR / "creatures"
 
 
-UPLOAD_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
+# UPLOAD_DIR.mkdir(
+#     parents=True,
+#     exist_ok=True,
+# )
 
-CREATURE_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
+# CREATURE_DIR.mkdir(
+#     parents=True,
+#     exist_ok=True,
+# )
 
 
 # ============================================================
