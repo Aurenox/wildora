@@ -47,8 +47,13 @@ STATIC_DIR = next(
 )
 
 
-UPLOAD_DIR = STATIC_DIR / "uploads"
-CREATURE_DIR = STATIC_DIR / "creatures"
+UPLOAD_DIR = Path("/tmp/wildora/uploads")
+CREATURE_DIR = Path("/tmp/wildora/creatures")
+
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+CREATURE_DIR.mkdir(parents=True, exist_ok=True)
+# UPLOAD_DIR = STATIC_DIR / "uploads"
+# CREATURE_DIR = STATIC_DIR / "creatures"
 
 
 # UPLOAD_DIR.mkdir(
