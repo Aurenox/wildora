@@ -1,0 +1,42 @@
+1
+00:00:00,000 --> 00:00:15,000
+What if identifying wildlife could become more than just recognizing a species?
+What if every sighting could become an opportunity to learn, explore, and protect biodiversity?
+
+2
+00:00:15,000 --> 00:00:30,000
+Meet Wildora — an interactive wildlife discovery platform built around India's incredible biodiversity.
+
+3
+00:00:30,000 --> 00:00:50,000
+A user can upload a photograph of a wildlife observation.
+Wildora is designed to analyze the observation and provide meaningful information about the species.
+
+4
+00:00:50,000 --> 00:01:15,000
+For example, this observation is identified as the Indian Peafowl.
+Wildora provides its common and scientific name, taxonomic group, confidence level, habitat, ecological role, conservation information, and interesting facts.
+
+5
+00:01:15,000 --> 00:01:35,000
+But Wildora adds another layer to wildlife discovery.
+The real animal can inspire a fictional fantasy companion that users can collect.
+
+6
+00:01:35,000 --> 00:01:55,000
+Every observation also contributes to progression.
+Users can earn XP, level up, discover new species and taxonomic groups, and unlock achievements.
+
+7
+00:01:55,000 --> 00:02:10,000
+Over time, these discoveries become part of the user's wildlife collection,
+turning real-world observation into an ongoing exploration experience.
+
+8
+00:02:10,000 --> 00:02:20,000
+Observations can also be associated with locations and visualized through the biodiversity atlas.
+
+9
+00:02:20,000 --> 00:02:30,000
+Wildora makes wildlife discovery more interactive while keeping real biodiversity at the center.
+Discover wildlife. Earn companions. Protect biodiversity.
