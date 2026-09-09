@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import uuid
 from pathlib import Path
 
@@ -51,15 +52,19 @@ UPLOAD_DIR = STATIC_DIR / "uploads"
 CREATURE_DIR = STATIC_DIR / "creatures"
 
 
-# UPLOAD_DIR.mkdir(
-#     parents=True,
-#     exist_ok=True,
-# )
+# ============================================================
+# CREATE DIRECTORIES
+# ============================================================
 
-# CREATURE_DIR.mkdir(
-#     parents=True,
-#     exist_ok=True,
-# )
+UPLOAD_DIR.mkdir(
+    parents=True,
+    exist_ok=True,
+)
+
+CREATURE_DIR.mkdir(
+    parents=True,
+    exist_ok=True,
+)
 
 
 # ============================================================
@@ -327,6 +332,8 @@ async def observe(
 
         "image/bmp": ".bmp",
 
+        "image/svg+xml": ".svg",
+
     }
 
 
@@ -347,15 +354,63 @@ async def observe(
     # Save uploaded image
     # --------------------------------------------------------
 
-    filename = (
-        f"{uuid.uuid4().hex}"
-        f"{extension}"
+    original_name = Path(
+        photo.filename or ""
+    ).name
+
+
+    safe_name = re.sub(
+        r"[^a-zA-Z0-9._-]",
+        "_",
+        original_name,
     )
+
+
+    if not safe_name:
+
+        safe_name = (
+            f"wildlife{extension}"
+        )
+
+
+    # Make sure the filename has an extension
+    if not Path(safe_name).suffix:
+
+        safe_name = (
+            f"{safe_name}{extension}"
+        )
 
 
     image_path = (
-        UPLOAD_DIR / filename
+        UPLOAD_DIR / safe_name
     )
+
+
+    # --------------------------------------------------------
+    # Prevent overwriting existing files
+    # --------------------------------------------------------
+
+    if image_path.exists():
+
+        stem = image_path.stem
+
+        suffix = image_path.suffix
+
+        counter = 1
+
+
+        while image_path.exists():
+
+            image_path = (
+                UPLOAD_DIR
+                /
+                f"{stem}_{counter}{suffix}"
+            )
+
+            counter += 1
+
+
+    filename = image_path.name
 
 
     image_path.write_bytes(
