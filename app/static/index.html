@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,10 +12,17 @@
 
     <meta
         name="description"
-        content="Wildora — discover India's wildlife with AI."
+        content="Wildora — India's Wildlife, Reimagined"
     >
 
-    <title>Wildora — India's Wildlife, Reimagined</title>
+    <title>
+        Wildora — India's Wildlife, Reimagined
+    </title>
+
+
+    <!-- =====================================================
+         FONTS
+    ====================================================== -->
 
     <link
         rel="preconnect"
@@ -31,22 +40,1361 @@
         rel="stylesheet"
     >
 
+
+    <!-- =====================================================
+         LEAFLET MAP
+    ====================================================== -->
+
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
+
+    <!-- =====================================================
+         EXISTING WILDORA CSS
+    ====================================================== -->
+
     <link
         rel="stylesheet"
         href="/static/style.css"
     >
+
+
+    <!-- =====================================================
+         LOCATION / ATLAS UI
+    ====================================================== -->
+
+    <style>
+
+        /* =================================================
+           LOCATION BUTTONS
+        ================================================= */
+
+        .location-buttons {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+
+            margin-top: 8px;
+
+        }
+
+
+        .location-button {
+
+            min-height: 52px;
+
+            border-radius: 13px;
+
+            border: 1px solid
+                rgba(255,255,255,.10);
+
+            background:
+                rgba(255,255,255,.045);
+
+            color: inherit;
+
+            cursor: pointer;
+
+            font-family:
+                inherit;
+
+            font-size:
+                .75rem;
+
+            font-weight:
+                700;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            transition:
+                .2s ease;
+
+        }
+
+
+        .location-button:hover {
+
+            transform:
+                translateY(-1px);
+
+            background:
+                rgba(255,255,255,.08);
+
+            border-color:
+                rgba(139,124,255,.4);
+
+        }
+
+
+        .location-button.map {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139,124,255,.20),
+                    rgba(103,70,220,.12)
+                );
+
+            border-color:
+                rgba(139,124,255,.32);
+
+        }
+
+
+        .location-button:disabled {
+
+            opacity:
+                .55;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+
+        }
+
+
+        /* =================================================
+           LOCATION RESULT
+        ================================================= */
+
+        .selected-location {
+
+            display: none;
+
+            margin-top: 10px;
+
+            padding: 12px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(139,124,255,.055);
+
+            border:
+                1px solid
+                rgba(139,124,255,.15);
+
+        }
+
+
+        .selected-location.visible {
+
+            display: block;
+
+        }
+
+
+        .selected-location-title {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            font-size:
+                .58rem;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .08em;
+
+            opacity:
+                .5;
+
+        }
+
+
+        .selected-location-name {
+
+            margin-top: 5px;
+
+            font-family:
+                "Space Grotesk",
+                sans-serif;
+
+            font-size:
+                .78rem;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .selected-location-coordinates {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 7px;
+
+            margin-top: 9px;
+
+        }
+
+
+        .coordinate-box {
+
+            padding: 8px 9px;
+
+            border-radius: 9px;
+
+            background:
+                rgba(0,0,0,.16);
+
+        }
+
+
+        .coordinate-box span {
+
+            display: block;
+
+            font-size:
+                .52rem;
+
+            opacity:
+                .4;
+
+            text-transform:
+                uppercase;
+
+        }
+
+
+        .coordinate-box strong {
+
+            display: block;
+
+            margin-top: 3px;
+
+            font-family:
+                monospace;
+
+            font-size:
+                .66rem;
+
+        }
+
+
+        /* =================================================
+           LOCATION MODAL
+        ================================================= */
+
+        .location-modal {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 99999;
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 16px;
+
+            background:
+                rgba(0,0,0,.78);
+
+            backdrop-filter:
+                blur(9px);
+
+        }
+
+
+        .location-modal.open {
+
+            display: flex;
+
+        }
+
+
+        .location-modal-card {
+
+            width:
+                min(1050px, 96vw);
+
+            max-height:
+                94vh;
+
+            overflow-y:
+                auto;
+
+            border-radius:
+                20px;
+
+            background:
+                #11131d;
+
+            border:
+                1px solid
+                rgba(255,255,255,.11);
+
+            box-shadow:
+                0 30px 100px
+                rgba(0,0,0,.65);
+
+        }
+
+
+        .location-modal-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            gap: 15px;
+
+            padding:
+                18px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.08);
+
+        }
+
+
+        .location-modal-header h2 {
+
+            margin: 0;
+
+            font-family:
+                "Space Grotesk",
+                sans-serif;
+
+            font-size:
+                1rem;
+
+        }
+
+
+        .location-modal-header p {
+
+            margin:
+                5px 0 0;
+
+            font-size:
+                .68rem;
+
+            opacity:
+                .5;
+
+        }
+
+
+        .location-close {
+
+            width:
+                36px;
+
+            height:
+                36px;
+
+            border-radius:
+                50%;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.05);
+
+            color:
+                white;
+
+            cursor:
+                pointer;
+
+            font-size:
+                1.1rem;
+
+        }
+
+
+        .location-modal-body {
+
+            padding:
+                16px;
+
+        }
+
+
+        #locationPickerMap {
+
+            width:
+                100%;
+
+            height:
+                440px;
+
+            border-radius:
+                15px;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        /* =================================================
+           PICKER INFO
+        ================================================= */
+
+        .picker-info {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr 1fr;
+
+            gap: 8px;
+
+            margin-top:
+                10px;
+
+        }
+
+
+        .picker-info-box {
+
+            padding:
+                10px;
+
+            border-radius:
+                10px;
+
+            background:
+                rgba(255,255,255,.035);
+
+        }
+
+
+        .picker-info-box small {
+
+            display: block;
+
+            font-size:
+                .53rem;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .08em;
+
+            opacity:
+                .42;
+
+        }
+
+
+        .picker-info-box strong {
+
+            display: block;
+
+            margin-top:
+                4px;
+
+            font-size:
+                .67rem;
+
+        }
+
+
+        /* =================================================
+           MODAL ACTIONS
+        ================================================= */
+
+        .picker-actions {
+
+            display:
+                flex;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                8px;
+
+            margin-top:
+                10px;
+
+        }
+
+
+        .picker-action {
+
+            padding:
+                10px 14px;
+
+            border-radius:
+                999px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.10);
+
+            background:
+                rgba(255,255,255,.05);
+
+            color:
+                white;
+
+            cursor:
+                pointer;
+
+            font-family:
+                inherit;
+
+            font-size:
+                .68rem;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .picker-action.primary {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8f6cff,
+                    #6934d9
+                );
+
+            border:
+                none;
+
+        }
+
+
+        /* =================================================
+           LANDMARKS
+        ================================================= */
+
+        .landmark-section {
+
+            margin-top:
+                18px;
+
+        }
+
+
+        .landmark-heading h3 {
+
+            margin:
+                0;
+
+            font-family:
+                "Space Grotesk",
+                sans-serif;
+
+            font-size:
+                .85rem;
+
+        }
+
+
+        .landmark-heading p {
+
+            margin:
+                4px 0 10px;
+
+            font-size:
+                .63rem;
+
+            opacity:
+                .48;
+
+        }
+
+
+        .landmark-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap:
+                7px;
+
+        }
+
+
+        .landmark-card {
+
+            padding:
+                10px;
+
+            border-radius:
+                11px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            background:
+                rgba(255,255,255,.035);
+
+            color:
+                white;
+
+            text-align:
+                left;
+
+            cursor:
+                pointer;
+
+            transition:
+                .2s ease;
+
+        }
+
+
+        .landmark-card:hover {
+
+            transform:
+                translateY(-2px);
+
+            border-color:
+                rgba(139,124,255,.45);
+
+            background:
+                rgba(139,124,255,.08);
+
+        }
+
+
+        .landmark-icon {
+
+            font-size:
+                1.15rem;
+
+        }
+
+
+        .landmark-name {
+
+            margin-top:
+                5px;
+
+            font-size:
+                .62rem;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .landmark-place {
+
+            margin-top:
+                3px;
+
+            font-size:
+                .54rem;
+
+            opacity:
+                .45;
+
+        }
+
+
+        .landmark-coords {
+
+            margin-top:
+                4px;
+
+            font-family:
+                monospace;
+
+            font-size:
+                .5rem;
+
+            opacity:
+                .35;
+
+        }
+
+
+        .landmark-detail {
+
+            display:
+                none;
+
+            margin-top:
+                10px;
+
+            padding:
+                13px;
+
+            border-radius:
+                12px;
+
+            background:
+                rgba(139,124,255,.06);
+
+            border:
+                1px solid
+                rgba(139,124,255,.14);
+
+        }
+
+
+        .landmark-detail.visible {
+
+            display:
+                block;
+
+        }
+
+
+        .landmark-detail-title {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            gap:
+                12px;
+
+        }
+
+
+        .landmark-detail-title strong {
+
+            font-family:
+                "Space Grotesk",
+                sans-serif;
+
+            font-size:
+                .82rem;
+
+        }
+
+
+        .landmark-detail-title span {
+
+            font-family:
+                monospace;
+
+            font-size:
+                .56rem;
+
+            opacity:
+                .5;
+
+        }
+
+
+        .animal-list {
+
+            display:
+                flex;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                5px;
+
+            margin-top:
+                8px;
+
+        }
+
+
+        .animal-chip {
+
+            padding:
+                5px 8px;
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            font-size:
+                .57rem;
+
+        }
+
+
+        /* =================================================
+           ATLAS
+        ================================================= */
+
+        .atlas-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                minmax(0,1.6fr)
+                minmax(280px,.75fr);
+
+            gap:
+                13px;
+
+        }
+
+
+        .atlas-map-card {
+
+            padding:
+                10px;
+
+            border-radius:
+                17px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+        }
+
+
+        #map {
+
+            width:
+                100%;
+
+            height:
+                550px;
+
+            border-radius:
+                12px;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .atlas-observations {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                8px;
+
+            max-height:
+                550px;
+
+            overflow-y:
+                auto;
+
+        }
+
+
+        .atlas-observation {
+
+            padding:
+                12px;
+
+            border-radius:
+                13px;
+
+            background:
+                rgba(255,255,255,.035);
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            cursor:
+                pointer;
+
+            transition:
+                .2s ease;
+
+        }
+
+
+        .atlas-observation:hover {
+
+            border-color:
+                rgba(139,124,255,.4);
+
+            background:
+                rgba(255,255,255,.055);
+
+        }
+
+
+        .atlas-observation-top {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            gap:
+                8px;
+
+        }
+
+
+        .atlas-observation-name {
+
+            font-family:
+                "Space Grotesk",
+                sans-serif;
+
+            font-size:
+                .76rem;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .atlas-observation-group {
+
+            margin-top:
+                3px;
+
+            font-size:
+                .57rem;
+
+            opacity:
+                .45;
+
+        }
+
+
+        .atlas-observation-location {
+
+            margin-top:
+                9px;
+
+            font-size:
+                .61rem;
+
+            opacity:
+                .6;
+
+        }
+
+
+        .atlas-observation-coordinates {
+
+            margin-top:
+                4px;
+
+            font-family:
+                monospace;
+
+            font-size:
+                .53rem;
+
+            opacity:
+                .38;
+
+        }
+
+
+        /* =================================================
+           ATLAS DETAIL
+        ================================================= */
+
+        .atlas-detail {
+
+            display:
+                none;
+
+            margin-top:
+                13px;
+
+            padding:
+                16px;
+
+            border-radius:
+                15px;
+
+            background:
+                rgba(255,255,255,.035);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+        }
+
+
+        .atlas-detail.visible {
+
+            display:
+                block;
+
+        }
+
+
+        .atlas-detail-head {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+
+        }
+
+
+        .atlas-detail-name {
+
+            font-family:
+                "Space Grotesk",
+                sans-serif;
+
+            font-size:
+                1rem;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .atlas-detail-scientific {
+
+            margin-top:
+                3px;
+
+            font-size:
+                .66rem;
+
+            font-style:
+                italic;
+
+            opacity:
+                .45;
+
+        }
+
+
+        .atlas-detail-coordinates {
+
+            padding:
+                7px 9px;
+
+            border-radius:
+                8px;
+
+            background:
+                rgba(0,0,0,.16);
+
+            font-family:
+                monospace;
+
+            font-size:
+                .57rem;
+
+            white-space:
+                nowrap;
+
+        }
+
+
+        .atlas-location-box {
+
+            margin-top:
+                12px;
+
+            padding:
+                10px;
+
+            border-radius:
+                10px;
+
+            background:
+                rgba(139,124,255,.06);
+
+        }
+
+
+        .atlas-location-box small {
+
+            display:
+                block;
+
+            font-size:
+                .52rem;
+
+            opacity:
+                .42;
+
+        }
+
+
+        .atlas-location-box strong {
+
+            display:
+                block;
+
+            margin-top:
+                4px;
+
+            font-size:
+                .68rem;
+
+        }
+
+
+        .atlas-facts {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap:
+                7px;
+
+            margin-top:
+                8px;
+
+        }
+
+
+        .atlas-fact {
+
+            padding:
+                9px;
+
+            border-radius:
+                9px;
+
+            background:
+                rgba(255,255,255,.035);
+
+        }
+
+
+        .atlas-fact small {
+
+            display:
+                block;
+
+            font-size:
+                .5rem;
+
+            text-transform:
+                uppercase;
+
+            opacity:
+                .4;
+
+        }
+
+
+        .atlas-fact strong {
+
+            display:
+                block;
+
+            margin-top:
+                3px;
+
+            font-size:
+                .6rem;
+
+            line-height:
+                1.4;
+
+        }
+
+
+        .atlas-text {
+
+            margin-top:
+                10px;
+
+        }
+
+
+        .atlas-text small {
+
+            display:
+                block;
+
+            margin-bottom:
+                3px;
+
+            font-size:
+                .51rem;
+
+            text-transform:
+                uppercase;
+
+            opacity:
+                .4;
+
+        }
+
+
+        .atlas-text p {
+
+            margin:
+                0;
+
+            font-size:
+                .62rem;
+
+            line-height:
+                1.5;
+
+            opacity:
+                .7;
+
+        }
+
+
+        @media(max-width:850px) {
+
+            .atlas-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .atlas-observations {
+
+                max-height:
+                    none;
+
+            }
+
+
+            .landmark-grid {
+
+                grid-template-columns:
+                    repeat(2,1fr);
+
+            }
+
+        }
+
+
+        @media(max-width:600px) {
+
+            .location-buttons {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .picker-info {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .landmark-grid {
+
+                grid-template-columns:
+                    repeat(2,1fr);
+
+            }
+
+
+            #locationPickerMap {
+
+                height:
+                    330px;
+
+            }
+
+
+            #map {
+
+                height:
+                    380px;
+
+            }
+
+
+            .atlas-facts {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+
+            .atlas-detail-head {
+
+                flex-direction:
+                    column;
+
+            }
+
+        }
+
+    </style>
+
 </head>
 
 
 <body>
 
+
 <!-- ========================================================
-     NAVIGATION
+     HEADER
 ========================================================= -->
 
 <header class="site-header">
@@ -57,11 +1405,15 @@
             href="#top"
             class="brand"
         >
-            <span class="brand-mark">W</span>
+
+            <span class="brand-mark">
+                W
+            </span>
 
             <span class="brand-name">
                 Wildora
             </span>
+
         </a>
 
 
@@ -90,8 +1442,13 @@
             href="#observe"
             class="nav-action"
         >
+
             Start exploring
-            <span>↗</span>
+
+            <span>
+                ↗
+            </span>
+
         </a>
 
     </nav>
@@ -113,26 +1470,34 @@
         <div class="hero-copy">
 
             <div class="eyebrow">
+
                 <span class="eyebrow-dot"></span>
+
                 AI wildlife discovery
+
             </div>
 
 
             <h1>
+
                 India's wildlife.
+
                 <span>
                     One discovery
                     at a time.
                 </span>
+
             </h1>
 
 
             <p class="hero-description">
+
                 Point your camera at the wild.
                 Wildora identifies what you found,
                 explains its role in nature and
                 transforms every sighting into
                 your own wildlife journey.
+
             </p>
 
 
@@ -142,8 +1507,8 @@
                     href="#observe"
                     class="button button-primary"
                 >
-                    <span>Discover wildlife</span>
-                    <span>→</span>
+                    Discover wildlife
+                    →
                 </a>
 
 
@@ -176,13 +1541,12 @@
         </div>
 
 
-        <!-- HERO VISUAL -->
-
         <div class="hero-visual">
 
             <div class="hero-glow"></div>
 
             <div class="hero-orbit orbit-one"></div>
+
             <div class="hero-orbit orbit-two"></div>
 
 
@@ -202,6 +1566,7 @@
                 </span>
 
                 <div>
+
                     <strong>
                         New discovery
                     </strong>
@@ -209,6 +1574,7 @@
                     <small>
                         Indian Elephant
                     </small>
+
                 </div>
 
             </div>
@@ -228,8 +1594,13 @@
 
 
             <div class="hero-location">
-                <span>●</span>
+
+                <span>
+                    ●
+                </span>
+
                 Western Ghats
+
             </div>
 
         </div>
@@ -240,7 +1611,7 @@
 
 
 <!-- ========================================================
-     EXPLORER DASHBOARD
+     DASHBOARD
 ========================================================= -->
 
 <section
@@ -255,9 +1626,13 @@
             <div>
 
                 <div class="eyebrow">
+
                     <span class="eyebrow-dot"></span>
+
                     Explorer dashboard
+
                 </div>
+
 
                 <h2>
                     Your wild journey
@@ -290,6 +1665,7 @@
                 </span>
 
                 <div>
+
                     <small>
                         Discoveries
                     </small>
@@ -297,6 +1673,7 @@
                     <strong id="statObs">
                         0
                     </strong>
+
                 </div>
 
             </div>
@@ -309,6 +1686,7 @@
                 </span>
 
                 <div>
+
                     <small>
                         Species
                     </small>
@@ -316,6 +1694,7 @@
                     <strong id="statSpecies">
                         0
                     </strong>
+
                 </div>
 
             </div>
@@ -328,6 +1707,7 @@
                 </span>
 
                 <div>
+
                     <small>
                         Total XP
                     </small>
@@ -335,6 +1715,7 @@
                     <strong id="statXp">
                         0
                     </strong>
+
                 </div>
 
             </div>
@@ -387,7 +1768,7 @@
 
 
 <!-- ========================================================
-     OBSERVE
+     OBSERVATION
 ========================================================= -->
 
 <section
@@ -400,17 +1781,21 @@
         <div class="section-heading">
 
             <div class="eyebrow">
+
                 <span class="eyebrow-dot"></span>
+
                 Make an observation
+
             </div>
+
 
             <h2>
                 What did you find?
             </h2>
 
+
             <p>
-                Upload a photo and let Wildora
-                investigate it.
+                Upload a photo and let Wildora investigate it.
             </p>
 
         </div>
@@ -421,7 +1806,11 @@
             class="capture-shell"
         >
 
+
             <div class="capture-main">
+
+
+                <!-- PHOTO -->
 
                 <label
                     id="dropzone"
@@ -445,13 +1834,16 @@
                             ↑
                         </div>
 
+
                         <strong>
                             Drop a wildlife photo here
                         </strong>
 
+
                         <span>
                             or click to browse
                         </span>
+
 
                         <small>
                             JPG, PNG, WEBP · Max 12 MB
@@ -467,6 +1859,7 @@
                         hidden
                     >
 
+
                     <div
                         id="dropCopy"
                         class="drop-copy"
@@ -478,54 +1871,159 @@
                 </label>
 
 
+                <!-- =================================================
+                     LOCATION
+                ================================================== -->
+
                 <div class="capture-fields">
 
                     <div class="field">
 
-                        <label for="locality">
+                        <label>
                             Where did you see it?
                         </label>
+
+
+                        <div class="location-buttons">
+
+
+                            <button
+                                type="button"
+                                id="selectMapLocationBtn"
+                                class="location-button map"
+                            >
+
+                                <span>
+                                    🗺️
+                                </span>
+
+                                <span>
+                                    Select location on map
+                                </span>
+
+                                <span>
+                                    →
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                id="locateBtn"
+                                class="location-button"
+                            >
+
+                                <span>
+                                    ◎
+                                </span>
+
+                                <span>
+                                    Use current location
+                                </span>
+
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="selectedLocation"
+                            class="selected-location"
+                        >
+
+                            <div class="selected-location-title">
+
+                                <span>
+                                    SELECTED LOCATION
+                                </span>
+
+                                <span>
+                                    ✓
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                id="selectedLocationName"
+                                class="selected-location-name"
+                            >
+                                —
+                            </div>
+
+
+                            <div class="selected-location-coordinates">
+
+                                <div class="coordinate-box">
+
+                                    <span>
+                                        Latitude
+                                    </span>
+
+                                    <strong
+                                        id="selectedLatitude"
+                                    >
+                                        —
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="coordinate-box">
+
+                                    <span>
+                                        Longitude
+                                    </span>
+
+                                    <strong
+                                        id="selectedLongitude"
+                                    >
+                                        —
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Hidden values sent to FastAPI -->
 
                         <input
                             id="locality"
                             name="locality"
-                            type="text"
-                            placeholder="e.g. Wayanad, Kerala"
-                            autocomplete="off"
+                            type="hidden"
+                        >
+
+
+                        <input
+                            id="latitude"
+                            name="latitude"
+                            type="hidden"
+                        >
+
+
+                        <input
+                            id="longitude"
+                            name="longitude"
+                            type="hidden"
                         >
 
                     </div>
 
-
-                    <button
-                        type="button"
-                        id="locateBtn"
-                        class="location-button"
-                    >
-                        ◎ Use my location
-                    </button>
-
-
-                    <input
-                        id="latitude"
-                        name="latitude"
-                        type="hidden"
-                    >
-
-                    <input
-                        id="longitude"
-                        name="longitude"
-                        type="hidden"
-                    >
-
                 </div>
 
+
+                <!-- SUBMIT -->
 
                 <button
                     id="submitBtn"
                     class="button button-primary submit-button"
                     type="submit"
                 >
+
                     <span>
                         Identify with AI
                     </span>
@@ -533,6 +2031,7 @@
                     <span>
                         ✦
                     </span>
+
                 </button>
 
 
@@ -545,7 +2044,9 @@
             </div>
 
 
-            <!-- SAMPLE DISCOVERIES -->
+            <!-- =================================================
+                 SAMPLE PANEL
+            ================================================== -->
 
             <aside class="sample-panel">
 
@@ -563,6 +2064,7 @@
 
 
                 <div class="sample-grid">
+
 
                     <button
                         type="button"
@@ -681,9 +2183,13 @@
         <div class="result-heading">
 
             <div class="eyebrow">
+
                 <span class="eyebrow-dot"></span>
+
                 Wildora analysis
+
             </div>
+
 
             <h2 id="resultTitle">
                 Wildlife discovered
@@ -694,7 +2200,6 @@
 
         <div class="result-grid">
 
-            <!-- REAL SPECIES -->
 
             <article class="species-card">
 
@@ -725,9 +2230,11 @@
                                 SPECIES IDENTIFIED
                             </span>
 
+
                             <h3 id="realName">
                                 —
                             </h3>
+
 
                             <p
                                 id="latinName"
@@ -822,16 +2329,11 @@
             </article>
 
 
-            <!-- FANTASY COMPANION -->
-
             <article class="companion-card">
 
                 <div class="companion-visual">
 
-
-                    <div
-                        class="companion-placeholder"
-                    >
+                    <div class="companion-placeholder">
                         ✦
                     </div>
 
@@ -903,7 +2405,7 @@
 
 
 <!-- ========================================================
-     XP TOAST
+     XP
 ========================================================= -->
 
 <div
@@ -911,6 +2413,7 @@
     class="xp-toast"
     aria-live="polite"
 ></div>
+
 
 <div
     id="xpBurst"
@@ -929,22 +2432,28 @@
 
     <div class="container">
 
+
         <div class="section-heading-row">
 
             <div>
 
                 <div class="eyebrow">
+
                     <span class="eyebrow-dot"></span>
+
                     Biodiversity atlas
+
                 </div>
+
 
                 <h2>
                     Your wildlife map
                 </h2>
 
+
                 <p>
-                    Every location becomes part
-                    of your personal field journal.
+                    Explore the locations from
+                    your previous wildlife observations.
                 </p>
 
             </div>
@@ -965,13 +2474,209 @@
         </div>
 
 
-        <div class="atlas-layout">
+        <!-- =================================================
+             MAP + OBSERVATION LIST
+        ================================================== -->
+
+        <div class="atlas-grid">
+
+
+            <div class="atlas-map-card">
+
+                <div id="map"></div>
+
+            </div>
+
 
             <div
-                id="map"
-                class="wildlife-map"
+                id="atlasObservationList"
+                class="atlas-observations"
             ></div>
 
+        </div>
+
+
+        <!-- =================================================
+             SELECTED OBSERVATION DETAIL
+        ================================================== -->
+
+        <div
+            id="atlasDetail"
+            class="atlas-detail"
+        >
+
+            <div class="atlas-detail-head">
+
+                <div>
+
+                    <div
+                        id="atlasDetailName"
+                        class="atlas-detail-name"
+                    >
+                        —
+                    </div>
+
+
+                    <div
+                        id="atlasDetailScientific"
+                        class="atlas-detail-scientific"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="atlasDetailCoordinates"
+                    class="atlas-detail-coordinates"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="atlas-location-box">
+
+                <small>
+                    OBSERVATION LOCATION
+                </small>
+
+
+                <strong id="atlasDetailLocation">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="atlas-facts">
+
+                <div class="atlas-fact">
+
+                    <small>
+                        Taxonomic group
+                    </small>
+
+
+                    <strong id="atlasDetailGroup">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="atlas-fact">
+
+                    <small>
+                        Confidence
+                    </small>
+
+
+                    <strong id="atlasDetailConfidence">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="atlas-fact">
+
+                    <small>
+                        Habitat
+                    </small>
+
+
+                    <strong id="atlasDetailHabitat">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="atlas-fact">
+
+                    <small>
+                        Ecological role
+                    </small>
+
+
+                    <strong id="atlasDetailRole">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="atlas-fact">
+
+                    <small>
+                        Observation quality
+                    </small>
+
+
+                    <strong id="atlasDetailQuality">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="atlas-fact">
+
+                    <small>
+                        Companion
+                    </small>
+
+
+                    <strong id="atlasDetailCompanion">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="atlas-text">
+
+                <small>
+                    FUN FACT
+                </small>
+
+
+                <p id="atlasDetailFact">
+                    —
+                </p>
+
+            </div>
+
+
+            <div class="atlas-text">
+
+                <small>
+                    SAFETY NOTE
+                </small>
+
+
+                <p id="atlasDetailSafety">
+                    —
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TAXONOMIC RANGE
+        ================================================== -->
+
+        <div
+            class="atlas-layout"
+            style="margin-top:14px;"
+        >
 
             <aside class="taxon-panel">
 
@@ -979,9 +2684,11 @@
                     TAXONOMIC RANGE
                 </div>
 
+
                 <h3>
                     Biodiversity spread
                 </h3>
+
 
                 <div
                     id="taxonList"
@@ -1008,18 +2715,24 @@
 
     <div class="container">
 
+
         <div class="section-heading-row">
 
             <div>
 
                 <div class="eyebrow">
+
                     <span class="eyebrow-dot"></span>
+
                     Field journal
+
                 </div>
+
 
                 <h2>
                     Your wildlife collection
                 </h2>
+
 
                 <p>
                     A living record of everything
@@ -1057,18 +2770,24 @@
 
     <div class="container">
 
+
         <div class="section-heading-row">
 
             <div>
 
                 <div class="eyebrow">
+
                     <span class="eyebrow-dot"></span>
+
                     Explorer achievements
+
                 </div>
+
 
                 <h2>
                     Earn your field badges
                 </h2>
+
 
                 <p>
                     Explore more of India's biodiversity
@@ -1114,17 +2833,23 @@
 
     <div class="container">
 
+
         <div class="section-heading">
 
             <div class="eyebrow">
+
                 <span class="eyebrow-dot"></span>
+
                 The Wildora journey
+
             </div>
+
 
             <h2>
                 From observation
                 to imagination.
             </h2>
+
 
             <p>
                 A simple field experience with
@@ -1135,6 +2860,7 @@
 
 
         <div class="journey-grid">
+
 
             <article class="journey-card">
 
@@ -1246,16 +2972,22 @@
             <div class="vision-content">
 
                 <div class="eyebrow">
+
                     <span class="eyebrow-dot"></span>
+
                     The Wildora idea
+
                 </div>
 
 
                 <h2>
+
                     Discover more.
+
                     <span>
                         Take nothing.
                     </span>
+
                 </h2>
 
 
@@ -1270,8 +3002,13 @@
                     href="#observe"
                     class="button button-light"
                 >
+
                     Start a discovery
-                    <span>→</span>
+
+                    <span>
+                        →
+                    </span>
+
                 </a>
 
             </div>
@@ -1283,12 +3020,15 @@
                     W
                 </div>
 
+
                 <span>
+
                     INDIA'S
                     <br>
                     WILD
                     <br>
                     ATLAS
+
                 </span>
 
             </div>
@@ -1304,6 +3044,190 @@
 
 
 <!-- ========================================================
+     LOCATION MODAL
+========================================================= -->
+
+<div
+    id="locationModal"
+    class="location-modal"
+>
+
+    <div
+        id="locationBackdrop"
+        style="
+            position:absolute;
+            inset:0;
+        "
+    ></div>
+
+
+    <div class="location-modal-card">
+
+
+        <div class="location-modal-header">
+
+            <div>
+
+                <h2>
+                    🗺️ Select observation location
+                </h2>
+
+
+                <p>
+                    Click anywhere on the map,
+                    drag the marker, or select a wildlife landmark.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="closeLocationModal"
+                class="location-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="location-modal-body">
+
+
+            <!-- MAP -->
+
+            <div
+                id="locationPickerMap"
+            ></div>
+
+
+            <!-- COORDINATES -->
+
+            <div class="picker-info">
+
+
+                <div class="picker-info-box">
+
+                    <small>
+                        Latitude
+                    </small>
+
+
+                    <strong id="pickerLatitude">
+                        Not selected
+                    </strong>
+
+                </div>
+
+
+                <div class="picker-info-box">
+
+                    <small>
+                        Longitude
+                    </small>
+
+
+                    <strong id="pickerLongitude">
+                        Not selected
+                    </strong>
+
+                </div>
+
+
+                <div class="picker-info-box">
+
+                    <small>
+                        Location
+                    </small>
+
+
+                    <strong id="pickerLocation">
+                        Not selected
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="picker-actions">
+
+
+                <button
+                    type="button"
+                    id="pickerCurrentLocation"
+                    class="picker-action"
+                >
+                    ◎ Use current location
+                </button>
+
+
+                <button
+                    type="button"
+                    id="confirmLocation"
+                    class="picker-action primary"
+                >
+                    ✓ Use this location
+                </button>
+
+
+                <button
+                    type="button"
+                    id="cancelLocation"
+                    class="picker-action"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 WILDLIFE LANDMARKS
+            ================================================== -->
+
+            <div class="landmark-section">
+
+
+                <div class="landmark-heading">
+
+                    <h3>
+                        🐾 Wildlife landmarks
+                    </h3>
+
+
+                    <p>
+                        Click a landmark to understand
+                        what animals can commonly be found there.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="landmarkGrid"
+                    class="landmark-grid"
+                ></div>
+
+
+                <div
+                    id="landmarkDetail"
+                    class="landmark-detail"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
      FOOTER
 ========================================================= -->
 
@@ -1311,20 +3235,25 @@
 
     <div class="container footer-inner">
 
+
         <div class="footer-brand">
 
             <a
                 href="#top"
                 class="brand"
             >
+
                 <span class="brand-mark">
                     W
                 </span>
 
+
                 <span class="brand-name">
                     Wildora
                 </span>
+
             </a>
+
 
             <p>
                 India's wildlife,
@@ -1368,6 +3297,7 @@
             © 2026 Wildora
         </span>
 
+
         <span>
             Explore responsibly.
         </span>
@@ -1378,16 +3308,22 @@
 
 
 <!-- ========================================================
-     SCRIPTS
+     LEAFLET
 ========================================================= -->
 
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 ></script>
 
+
+<!-- ========================================================
+     WILDORA APP
+========================================================= -->
+
 <script
-    src="/static/app.js"
+    src="/static/app.js?v=location-v2"
 ></script>
+
 
 </body>
 </html>

@@ -20,6 +20,7 @@ DB_PATH = BASE_DIR / "wildora.db"
 # ============================================================
 
 def get_connection() -> sqlite3.Connection:
+
     conn = sqlite3.connect(
         DB_PATH,
         check_same_thread=False,
@@ -123,7 +124,9 @@ def insert_observation(
 
         conn.commit()
 
-        return int(cursor.lastrowid)
+        return int(
+            cursor.lastrowid
+        )
 
     finally:
 
@@ -165,27 +168,47 @@ def list_observations() -> list[dict[str, Any]]:
 
     result: list[dict[str, Any]] = []
 
+
     for row in rows:
 
+        # ----------------------------------------------------
+        # Analysis JSON
+        # ----------------------------------------------------
+
         try:
+
             analysis = json.loads(
                 row["analysis_json"]
             )
+
         except Exception:
+
             analysis = {}
 
 
+        # ----------------------------------------------------
+        # Creature JSON
+        # ----------------------------------------------------
+
         creature = None
+
 
         if row["creature_json"]:
 
             try:
+
                 creature = json.loads(
                     row["creature_json"]
                 )
+
             except Exception:
+
                 creature = None
 
+
+        # ----------------------------------------------------
+        # Result
+        # ----------------------------------------------------
 
         result.append(
             {
@@ -217,7 +240,9 @@ def list_observations() -> list[dict[str, Any]]:
                     creature,
 
                 "is_demo":
-                    bool(row["is_demo"]),
+                    bool(
+                        row["is_demo"]
+                    ),
             }
         )
 
@@ -241,8 +266,14 @@ def _progress(
         item
         for item in observations
         if (
-            item.get("analysis", {})
-            .get("kind", "")
+            item.get(
+                "analysis",
+                {}
+            )
+            .get(
+                "kind",
+                ""
+            )
             .lower()
             == "animal"
         )
@@ -255,12 +286,14 @@ def _progress(
 
     species_keys: set[str] = set()
 
+
     for item in animals:
 
         analysis = item.get(
             "analysis",
-            {},
+            {}
         )
+
 
         scientific_name = (
             analysis.get(
@@ -285,7 +318,9 @@ def _progress(
         )
 
 
-        species_keys.add(key)
+        species_keys.add(
+            key
+        )
 
 
     # --------------------------------------------------------
@@ -299,7 +334,7 @@ def _progress(
 
         analysis = item.get(
             "analysis",
-            {},
+            {}
         )
 
 
@@ -336,18 +371,20 @@ def _progress(
     # --------------------------------------------------------
     # XP
     #
-    # 100 XP  = wildlife observation
-    # 75 XP   = unique species
-    # 50 XP   = new taxonomic group
+    # 100 XP = wildlife observation
+    # 75 XP  = unique species
+    # 50 XP  = new taxonomic group
     # --------------------------------------------------------
 
     observation_xp = (
         len(animals) * 100
     )
 
+
     species_xp = (
         len(species_keys) * 75
     )
+
 
     group_xp = (
         len(group_counts) * 50
@@ -407,65 +444,114 @@ def _progress(
     # --------------------------------------------------------
 
     badges = [
+
         {
-            "id": "first-sighting",
-            "name": "First Sighting",
+            "id":
+                "first-sighting",
+
+            "name":
+                "First Sighting",
+
             "description":
                 "Record your first wildlife observation.",
-            "icon": "◉",
+
+            "icon":
+                "◉",
+
             "unlocked":
                 len(animals) >= 1,
         },
 
+
         {
-            "id": "species-explorer",
-            "name": "Species Explorer",
+            "id":
+                "species-explorer",
+
+            "name":
+                "Species Explorer",
+
             "description":
                 "Discover 3 different species.",
-            "icon": "✦",
+
+            "icon":
+                "✦",
+
             "unlocked":
                 len(species_keys) >= 3,
         },
 
+
         {
-            "id": "biodiversity-keeper",
-            "name": "Biodiversity Keeper",
+            "id":
+                "biodiversity-keeper",
+
+            "name":
+                "Biodiversity Keeper",
+
             "description":
                 "Explore 5 different species.",
-            "icon": "❈",
+
+            "icon":
+                "❈",
+
             "unlocked":
                 len(species_keys) >= 5,
         },
 
+
         {
-            "id": "wildlife-guardian",
-            "name": "Wildlife Guardian",
+            "id":
+                "wildlife-guardian",
+
+            "name":
+                "Wildlife Guardian",
+
             "description":
                 "Record 10 wildlife observations.",
-            "icon": "◆",
+
+            "icon":
+                "◆",
+
             "unlocked":
                 len(animals) >= 10,
         },
 
+
         {
-            "id": "taxa-tracker",
-            "name": "Taxa Tracker",
+            "id":
+                "taxa-tracker",
+
+            "name":
+                "Taxa Tracker",
+
             "description":
                 "Discover wildlife from 4 taxonomic groups.",
-            "icon": "◇",
+
+            "icon":
+                "◇",
+
             "unlocked":
                 len(group_counts) >= 4,
         },
 
+
         {
-            "id": "wildora-bioblitz",
-            "name": "Wildora BioBlitz",
+            "id":
+                "wildora-bioblitz",
+
+            "name":
+                "Wildora BioBlitz",
+
             "description":
                 "Discover 10 different species.",
-            "icon": "✹",
+
+            "icon":
+                "✹",
+
             "unlocked":
                 len(species_keys) >= 10,
         },
+
     ]
 
 
@@ -481,6 +567,7 @@ def _progress(
     # --------------------------------------------------------
 
     return {
+
         "observations":
             len(animals),
 
@@ -519,6 +606,7 @@ def _progress(
 
         "badge_count":
             len(unlocked_badges),
+
     }
 
 
@@ -528,9 +616,8 @@ def _progress(
 
 def stats() -> dict[str, Any]:
 
-    observations = (
-        list_observations()
-    )
+    observations =list_observations()
+
 
     return _progress(
         observations
@@ -547,27 +634,50 @@ def seed_demo_data() -> None:
 
     try:
 
-        existing = conn.execute(
-            """
-            SELECT COUNT(*)
-            FROM observations
-            WHERE is_demo = 1
-            """
-        ).fetchone()[0]
+        existing =conn.execute(
+                """
+                SELECT COUNT(*)
+                FROM observations
+                WHERE is_demo = 1
+                """
+            ).fetchone()[0]
 
     finally:
 
         conn.close()
 
 
-    # Already seeded
+    # ========================================================
+    # IMPORTANT
+    #
+    # If demo data already exists from an older version,
+    # update the old records with coordinates.
+    # ========================================================
+
     if existing:
+
+        update_demo_coordinates()
+
         return
 
 
+    # ========================================================
+    # DEMO OBSERVATIONS
+    # ========================================================
+
     demo_observations = [
 
+        # ----------------------------------------------------
+        # 1. INDIAN ELEPHANT
+        # ----------------------------------------------------
+
         {
+            "latitude":
+                9.4626,
+
+            "longitude":
+                77.1710,
+
             "locality":
                 "Periyar, Kerala",
 
@@ -575,6 +685,7 @@ def seed_demo_data() -> None:
                 "/static/demo/elephant.svg",
 
             "analysis": {
+
                 "kind":
                     "animal",
 
@@ -616,6 +727,7 @@ def seed_demo_data() -> None:
             },
 
             "creature": {
+
                 "name":
                     "Forest Guardian",
 
@@ -643,7 +755,17 @@ def seed_demo_data() -> None:
         },
 
 
+        # ----------------------------------------------------
+        # 2. INDIAN PEAFOWL
+        # ----------------------------------------------------
+
         {
+            "latitude":
+                12.2958,
+
+            "longitude":
+                76.6394,
+
             "locality":
                 "Mysuru, Karnataka",
 
@@ -651,6 +773,7 @@ def seed_demo_data() -> None:
                 "/static/demo/peafowl.svg",
 
             "analysis": {
+
                 "kind":
                     "animal",
 
@@ -692,6 +815,7 @@ def seed_demo_data() -> None:
             },
 
             "creature": {
+
                 "name":
                     "Plume Dancer",
 
@@ -719,7 +843,17 @@ def seed_demo_data() -> None:
         },
 
 
+        # ----------------------------------------------------
+        # 3. MALABAR GLIDING FROG
+        # ----------------------------------------------------
+
         {
+            "latitude":
+                11.0776,
+
+            "longitude":
+                76.4344,
+
             "locality":
                 "Silent Valley, Kerala",
 
@@ -727,6 +861,7 @@ def seed_demo_data() -> None:
                 "/static/demo/gliding-frog.svg",
 
             "analysis": {
+
                 "kind":
                     "animal",
 
@@ -768,6 +903,7 @@ def seed_demo_data() -> None:
             },
 
             "creature": {
+
                 "name":
                     "Rain Glider",
 
@@ -795,7 +931,17 @@ def seed_demo_data() -> None:
         },
 
 
+        # ----------------------------------------------------
+        # 4. COMMON MORMON
+        # ----------------------------------------------------
+
         {
+            "latitude":
+                10.1076,
+
+            "longitude":
+                76.6720,
+
             "locality":
                 "Thattekad, Kerala",
 
@@ -803,6 +949,7 @@ def seed_demo_data() -> None:
                 "/static/demo/common-mormon.svg",
 
             "analysis": {
+
                 "kind":
                     "animal",
 
@@ -844,6 +991,7 @@ def seed_demo_data() -> None:
             },
 
             "creature": {
+
                 "name":
                     "Bloom Wing",
 
@@ -873,15 +1021,156 @@ def seed_demo_data() -> None:
     ]
 
 
+    # ========================================================
+    # INSERT DEMO DATA
+    # ========================================================
+
     for item in demo_observations:
 
         insert_observation(
-            latitude=None,
-            longitude=None,
-            locality=item["locality"],
-            photo_url=item["photo_url"],
-            creature_url=None,
-            analysis=item["analysis"],
-            creature=item["creature"],
-            is_demo=True,
+
+            latitude=
+                item["latitude"],
+
+            longitude=
+                item["longitude"],
+
+            locality=
+                item["locality"],
+
+            photo_url=
+                item["photo_url"],
+
+            creature_url=
+                None,
+
+            analysis=
+                item["analysis"],
+
+            creature=
+                item["creature"],
+
+            is_demo=
+                True,
+
         )
+
+
+# ============================================================
+# UPDATE EXISTING DEMO COORDINATES
+# ============================================================
+
+def update_demo_coordinates() -> None:
+
+    """
+    Updates older demo records that were originally created
+    without latitude/longitude.
+
+    Real user observations are NOT modified.
+    """
+
+    conn = get_connection()
+
+    try:
+
+        rows = conn.execute(
+            """
+            SELECT
+                id,
+                locality,
+                latitude,
+                longitude
+            FROM observations
+            WHERE is_demo = 1
+            ORDER BY id ASC
+            """
+        ).fetchall()
+
+
+        for row in rows:
+
+            locality =(
+                    row["locality"]
+                    or ""
+                ).lower()
+
+
+            latitude = None
+            longitude = None
+
+
+            # ------------------------------------------------
+            # Indian Elephant
+            # ------------------------------------------------
+
+            if "periyar" in locality:
+
+                latitude =9.4626
+
+                longitude =77.1710
+
+
+            # ------------------------------------------------
+            # Indian Peafowl
+            # ------------------------------------------------
+
+            elif "mysuru" in locality:
+
+                latitude =12.2958
+
+                longitude =76.6394
+
+
+            # ------------------------------------------------
+            # Malabar Gliding Frog
+            # ------------------------------------------------
+
+            elif "silent valley" in locality:
+
+                latitude =11.0776
+
+                longitude =76.4344
+
+
+            # ------------------------------------------------
+            # Common Mormon
+            # ------------------------------------------------
+
+            elif "thattekad" in locality:
+
+                latitude =10.1076
+
+                longitude =76.6720
+
+
+            # ------------------------------------------------
+            # Update only matching demo rows
+            # ------------------------------------------------
+
+            if (
+                latitude is not None
+                and longitude is not None
+            ):
+
+                conn.execute(
+                    """
+                    UPDATE observations
+                    SET
+                        latitude = ?,
+                        longitude = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        latitude,
+                        longitude,
+                        row["id"],
+                    ),
+                )
+
+
+        conn.commit()
+
+
+    finally:
+
+        conn.close()
